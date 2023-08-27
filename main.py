@@ -23,7 +23,15 @@ alive = True
 direction = 0
 directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
+# то самое красное яблоко
 apple = random.randint(0, MSIZE[0]), random.randint(0, MSIZE[1])
+
+# Шрифт для очков
+pg.font.init()
+font_score = pg.font.SysFont("Arial", 23 )
+font_gameover = pg.font.SysFont("Arial", 43 )
+font_space = pg.font.SysFont("Arial", 18 )
+
 
 running = True
 while running:
@@ -34,13 +42,13 @@ while running:
             running = False
         # проверка на нажатии кнопок
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_RIGHT:
+            if event.key == pg.K_RIGHT and direction != 2:
                 direction = 0
-            if event.key == pg.K_DOWN:
+            if event.key == pg.K_DOWN and direction != 3:
                 direction = 1
-            if event.key == pg.K_LEFT:
+            if event.key == pg.K_LEFT and direction != 0:
                 direction = 2
-            if event.key == pg.K_UP:
+            if event.key == pg.K_UP and direction != 1:
                 direction = 3
 
     # залейте экран цветом
@@ -64,11 +72,16 @@ while running:
                 apple = random.randint(0, MSIZE[0]), random.randint(0, MSIZE[1])
             else:
                 snake.pop(-1)
+    else:
+        text = font_gameover.render(f"GAME OVER", True, "red")
+        screen.blit(text, (WSIZE[0] // 2 - text.get_width() // 2, WSIZE[1] // 2 - 50))
+        text = font_space.render(f"Press SPACE for restart ", True, "yellow")
+        screen.blit(text, (WSIZE[0] // 2 - text.get_width() // 2, WSIZE[1] // 2 + 50))
 
-    # flip() для отображения вашей работы на экране
+
+    screen.blit(font_score.render(f'Очки: {len(snake)}', True, 'yellow'), (5, 5))
+# flip() для отображения вашей работы на экране
     pygame.display.flip()
-
-
 
 
 pygame.quit()
