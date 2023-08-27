@@ -24,7 +24,7 @@ direction = 0
 directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
 # то самое красное яблоко
-apple = random.randint(0, MSIZE[0]), random.randint(0, MSIZE[1])
+apple = random.randint(0, MSIZE[0] - 1), random.randint(0, MSIZE[1] - 1)
 
 # Шрифт для очков
 pg.font.init()
@@ -37,22 +37,28 @@ running = True
 while running:
     clock.tick(fps)
     # Событие QUIT означает, что пользователь нажал X, чтобы закрыть окно.
+    # залейте экран цветом
+    screen.fill("black")
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         # проверка на нажатии кнопок
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_RIGHT and direction != 2:
-                direction = 0
-            if event.key == pg.K_DOWN and direction != 3:
-                direction = 1
-            if event.key == pg.K_LEFT and direction != 0:
-                direction = 2
-            if event.key == pg.K_UP and direction != 1:
-                direction = 3
-
-    # залейте экран цветом
-    screen.fill("black")
+            if alive:
+                if event.key == pg.K_RIGHT and direction != 2:
+                    direction = 0
+                if event.key == pg.K_DOWN and direction != 3:
+                    direction = 1
+                if event.key == pg.K_LEFT and direction != 0:
+                    direction = 2
+                if event.key == pg.K_UP and direction != 1:
+                    direction = 3
+            else:
+                if event.key == pg.K_SPACE:
+                    alive = True
+                    snake = [start_pos]
+                    apple = random.randint(0, MSIZE[0] - 1), random.randint(0, MSIZE[1] - 1)
+                    fps = 5
 
     # draw - мудуль для рисовки фигур
     [pg.draw.rect(screen, 'green', (x * TSIDE, y * TSIDE, TSIDE - 1, TSIDE - 1)) for x, y in snake]
@@ -63,13 +69,13 @@ while running:
         new_pos = snake[0][0] + directions[direction][0], snake[0][1] + directions[direction][1]
         # проверка за бардюр , проверка не в сами мы в себе
         if not (0 <= new_pos[0] < MSIZE[0] and 0 <= new_pos[1] < MSIZE[1]) or \
-            new_pos in snake:
+                new_pos in snake:
             alive = False
         else:
             snake.insert(0, new_pos)
             if new_pos == apple:
                 fps += 1
-                apple = random.randint(0, MSIZE[0]), random.randint(0, MSIZE[1])
+                apple = random.randint(0, MSIZE[0] - 1), random.randint(0, MSIZE[1] - 1)
             else:
                 snake.pop(-1)
     else:
@@ -80,7 +86,7 @@ while running:
 
 
     screen.blit(font_score.render(f'Очки: {len(snake)}', True, 'yellow'), (5, 5))
-# flip() для отображения вашей работы на экране
+    # flip() для отображения вашей работы на экране
     pygame.display.flip()
 
 
