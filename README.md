@@ -6,9 +6,12 @@
 
 * Python(3.8)
 
+* IDE pyCharm
+
 * lab random
 
 * lab pygame
+
 
 
 ## Как открыть/запустить
